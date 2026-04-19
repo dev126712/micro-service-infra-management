@@ -3,6 +3,8 @@ name: Security Scan
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - '**.tf'
   pull_request:
     branches: [ "main" ]
   #schedule:
