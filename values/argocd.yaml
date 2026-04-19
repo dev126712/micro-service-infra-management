@@ -1,0 +1,24 @@
+server:
+  service:
+    type: NodePort
+  additionalApplications:
+    - name: root-app
+      project: default
+      namespace: argocd
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      source:
+        repoURL: https://github.com/dev126712/microservices-config.git
+        targetRevision: HEAD
+        path: application-manifest
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+  config:
+     application.instanceLabelKey: argocd.argoproj.io/instance
+  params:
+    server.insecure: true
+global:
+  domain: argocd.example.com
