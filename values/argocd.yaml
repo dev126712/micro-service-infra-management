@@ -9,7 +9,7 @@ server:
         server: https://kubernetes.default.svc
         namespace: default
       source:
-        repoURL: https://github.com/dev126712/microservices-config.git
+        repoURL: https://github.com/dev126712/microservice-charts-deployment.git
         targetRevision: HEAD
         path: application-manifest
       syncPolicy:
