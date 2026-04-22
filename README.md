@@ -8,7 +8,7 @@ The environment is fully automated using Terraform, targeting Google Cloud Platf
 
   - Networking: A custom VPC with private subnets, Cloud NAT for egress, and specific firewall rules for GKE master-to-node communication.
 
-  - Edge: A Global External Load Balancer configured via a static IP, prepared for managed SSL certificates.
+  - Edge: A Global External Load Balancer configured via a static IP.
 
 #### 🚀 Application Architecture
 The system follows a microservices pattern with a focus on decoupled communication:
