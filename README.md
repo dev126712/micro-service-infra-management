@@ -15,8 +15,6 @@ The system follows a microservices pattern with a focus on decoupled communicati
 
   - Frontend: A micro-frontend (Nginx-based) that serves the UI and acts as a reverse proxy for backend APIs.
 
-  - Service Shimming: Uses Kubernetes ExternalName services to allow the frontend namespace to communicate seamlessly with the order-ns and product-ns namespaces.
-
 #### Traffic Management:
 
   - Legacy: Standard Kubernetes Ingress (GCE class) for path-based routing.
