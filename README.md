@@ -10,6 +10,10 @@ The environment is fully automated using Terraform, targeting Google Cloud Platf
 
   - Edge: A Global External Load Balancer configured via a static IP.
 
+  - Monotiring & Login: Installation of victoriaMetrics, Grafana in the cluster via helm.
+
+  - Configuration: HTTP Route configuration for Grafana Dashboard
+
 #### 🚀 Application Architecture
 The system follows a microservices pattern with a focus on decoupled communication:
 
@@ -33,12 +37,12 @@ The system follows a microservices pattern with a focus on decoupled communicati
   - Observability: Integrated health checks (Liveness/Readiness probes) and Horizontal Pod Autoscaling (HPA) for the frontend service.
 
 #### 🛠 Tech Stack
-Cloud: GCP (GKE, VPC, Load Balancing)
-
+Cloud: GCP (GKE, VPC, Load Balancing, Gateway API)
 IaC: Terraform
 
-Configuration: Helm (Charts for Frontend, Orders, Products)
-
+#### Login & Monitoring
+VictoriaMetrics
+Graffana
 Networking: K8s Gateway API, Nginx
 
 Security: HashiCorp Vault, Trivy, K8s NetworkPolicies
