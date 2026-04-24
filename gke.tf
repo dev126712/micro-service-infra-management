@@ -11,6 +11,11 @@ resource "google_container_cluster" "primary" {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
 
+  gateway_api_config {
+    # 'CHANNEL_STANDARD' enables the stable Gateway API resources
+    channel = "CHANNEL_STANDARD"
+  }
+
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
