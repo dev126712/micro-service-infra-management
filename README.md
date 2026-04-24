@@ -33,11 +33,9 @@ The system follows a microservices pattern with a focus on decoupled communicati
   - Observability: Integrated health checks (Liveness/Readiness probes) and Horizontal Pod Autoscaling (HPA) for the frontend service.
 
 #### 🛠 Tech Stack
-Cloud: GCP (GKE, VPC, Load Balancing)
-
+Cloud: GCP (GKE, VPC, Load Balancing, Gateway API)
 IaC: Terraform
 
-Configuration: Helm (Charts for Frontend, Orders, Products)
 #### Login & Monitoring
 VictoriaMetrics
 Graffana
