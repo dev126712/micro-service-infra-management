@@ -38,7 +38,9 @@ Cloud: GCP (GKE, VPC, Load Balancing)
 IaC: Terraform
 
 Configuration: Helm (Charts for Frontend, Orders, Products)
-
+#### Login & Monitoring
+VictoriaMetrics
+Graffana
 Networking: K8s Gateway API, Nginx
 
 Security: HashiCorp Vault, Trivy, K8s NetworkPolicies
