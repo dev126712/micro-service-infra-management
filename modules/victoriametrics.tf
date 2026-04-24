@@ -57,11 +57,11 @@ resource "kubectl_manifest" "grafana_route" {
 }
 
 resource "kubectl_manifest" "grafana_healthcheck" {
-  yaml_body = file("${path.module}/grafana/grafana-healthcheck.yml")
+  yaml_body  = file("${path.module}/grafana/grafana-healthcheck.yml")
   depends_on = [helm_release.vm_stack]
 }
 
 resource "kubectl_manifest" "grafana_health_policy" {
-    yaml_body = file("${path.module}/grafana/healthcheck.yml")
-    depends_on = [helm_release.vm_stack]
+  yaml_body  = file("${path.module}/grafana/healthcheck.yml")
+  depends_on = [helm_release.vm_stack]
 }
