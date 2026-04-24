@@ -37,7 +37,7 @@ resource "google_compute_firewall" "extern_intern" {
     ports    = ["22", "3389"]
   }
   source_ranges = ["35.235.240.0/20"]
-  target_tags   = ["gke-${var.cluster_name}"]
+  target_tags   = ["gke-my-gke-cluster"] # Match your node tags
 }
 
 resource "google_compute_firewall" "gke_allow" {
@@ -74,3 +74,4 @@ resource "google_compute_router_nat" "nat" {
   }
 }
 
+data "google_client_config" "default" {}

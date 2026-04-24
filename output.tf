@@ -1,14 +1,19 @@
+output "load_balancer_ip" {
+  description = "The static external IP address for the Global Load Balancer. Point your DNS A-record to this IP."
+  value       = google_compute_global_address.lb_default_ip.address
+}
+
 output "gke_cluster_name" {
   description = "The name of the GKE cluster."
-  value       = module.gke_cluster.cluster_name
+  value       = google_container_cluster.primary.name
 }
 
 output "gke_cluster_endpoint" {
   description = "The IP address of the Kubernetes master."
-  value       = module.gke_cluster.cluster_endpoint
+  value       = google_container_cluster.primary.endpoint
 }
 
-output "cluster_ca_certificate" {
-  description = "The public certificate of the GKE cluster master."
-  value       = module.gke_cluster.cluster_ca_certificate
-}
+#output "ssl_certificate_status" {
+#  description = "The status of the managed SSL certificate."
+#  value       = google_compute_managed_ssl_certificate.default.managed[0].status
+#}

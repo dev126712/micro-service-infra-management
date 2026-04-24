@@ -1,9 +1,9 @@
 resource "google_container_cluster" "primary" {
-  name                = var.cluster_name
-  location            = var.cluster_region
+  name                = "my-gke-cluster"
+  location            = var.region
   project             = var.project_id
-  initial_node_count  = var.node_count
-  deletion_protection = var.deletion_protection # For demo purposes
+  initial_node_count  = 1
+  deletion_protection = false # For demo purposes
   network             = google_compute_network.my-network.id
   subnetwork          = google_compute_subnetwork.custum-subnet.id
 
@@ -19,18 +19,19 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = var.node_pool_name
+  name       = "my-node-pool"
   project    = google_container_cluster.primary.project
   cluster    = google_container_cluster.primary.name
   location   = google_container_cluster.primary.location
-  node_count = var.node_pool_count
+  node_count = 1
+  # node_locations = ["us-central1-a", "us-central1-b", "us-central1-c"]
   # enable_private_nodes = true
 
-  node_locations = slice(var.node_locations, 0, var.zone_count)
+  node_locations = ["us-central1-a"]
 
   node_config {
     preemptible  = false
-    machine_type = var.machine_type
+    machine_type = "e2-medium"
     # enable_private_nodes = true
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
@@ -41,12 +42,12 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   }
 
   autoscaling {
-    min_node_count = var.min_node_pool_count
-    max_node_count = var.max_node_pool_count
+    min_node_count = 1
+    max_node_count = 2
   }
 
   management {
-    auto_repair  = var.auto_repair
-    auto_upgrade = var.auto_upgrade
+    auto_repair  = true
+    auto_upgrade = true
   }
 }

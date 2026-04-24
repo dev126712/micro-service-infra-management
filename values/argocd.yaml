@@ -2,23 +2,23 @@ server:
   service:
     type: NodePort
   additionalApplications:
-    - name: ${argocd_name_app}
+    - name: root-app
       project: default
       namespace: argocd
       destination:
         server: https://kubernetes.default.svc
         namespace: default
       source:
-        repoURL: ${repo_url}
-        targetRevision: ${target_revision}
-        path: ${path}
+        repoURL: https://github.com/dev126712/microservice-charts-deployment.git
+        targetRevision: HEAD
+        path: application-manifest
       syncPolicy:
         automated:
-          prune: ${syncPolicy_prune}
-          selfHeal: ${syncPolicy_selfHeal}
+          prune: true
+          selfHeal: true
   config:
      application.instanceLabelKey: argocd.argoproj.io/instance
   params:
     server.insecure: true
 global:
-  domain: ${domaine_name}
+  domain: argocd.example.com

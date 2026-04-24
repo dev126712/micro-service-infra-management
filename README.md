@@ -48,4 +48,3 @@ Networking: K8s Gateway API, Nginx
 Security: HashiCorp Vault, Trivy, K8s NetworkPolicies
 
 CI/CD: ArgoCD
-# terraform-modules
