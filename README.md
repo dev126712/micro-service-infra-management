@@ -10,6 +10,8 @@ The environment is fully automated using Terraform, targeting Google Cloud Platf
 
   - Edge: A Global External Load Balancer configured via a static IP.
 
+  - Monotiring & Login: Installation of victoriaMetrics, Grafana in the cluster via helm 
+
 #### 🚀 Application Architecture
 The system follows a microservices pattern with a focus on decoupled communication:
 
