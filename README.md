@@ -1,50 +1,89 @@
-## GKE cluster Microservices with Gateway API & GitOps
-This project demonstrates a production-ready microservices architecture deployed on Google Kubernetes Engine (GKE). It utilizes a modern networking stack (Gateway API), automated infrastructure provisioning (Terraform), and a robust security/operations suite.
+# Microservice Infrastructure — GKE (Terraform)
 
-#### 🏗 Infrastructure (Terraform)
-The environment is fully automated using Terraform, targeting Google Cloud Platform:
+Terraform code that provisions the full GKE production environment for the [GitOps microservices platform](https://github.com/dev126712/microservice-end-to-end) on Google Cloud Platform.
 
-  - GKE Cluster: A regional cluster with Gateway API enabled (CHANNEL_STANDARD) and Workload Identity for secure GCP service access.
+[![My Skills](https://skillicons.dev/icons?i=terraform,gcp,kubernetes)](https://skillicons.dev)
 
-  - Networking: A custom VPC with private subnets, Cloud NAT for egress, and specific firewall rules for GKE master-to-node communication.
+---
 
-  - Edge: A Global External Load Balancer configured via a static IP.
+## What's Provisioned
 
-  - Monotiring & Login: Installation of victoriaMetrics, Grafana in the cluster via helm.
+```
+GCP Project
+└── Custom VPC + Private Subnets + Cloud NAT
+    └── GKE Cluster (Gateway API enabled, Workload Identity)
+        ├── Networking
+        │     ├── Global External Load Balancer (static IP)
+        │     └── Gateway API (HTTPRoute resources per service)
+        ├── GitOps
+        │     └── ArgoCD  → watches microservice-charts-deployment repo
+        ├── Security
+        │     ├── HashiCorp Vault (GCP KMS auto-unseal, Workload Identity)
+        │     └── Trivy Operator (continuous image scanning)
+        └── Observability
+              ├── VictoriaMetrics  (metrics storage)
+              └── Grafana  (dashboards, including HTTPRoute for external access)
+```
 
-  - Configuration: HTTP Route configuration for Grafana Dashboard
+---
 
-#### 🚀 Application Architecture
-The system follows a microservices pattern with a focus on decoupled communication:
+## Resources
 
-  - Frontend: A micro-frontend (Nginx-based) that serves the UI and acts as a reverse proxy for backend APIs.
+| Terraform File | Resources |
+|---|---|
+| `gke.tf` | GKE regional cluster — Gateway API (CHANNEL_STANDARD), Workload Identity |
+| `network.tf` | Custom VPC, private subnets, Cloud NAT, firewall rules |
+| `lb.tf` | Global External Load Balancer, reserved static IP |
+| `gateway.tf` | GKE Gateway API resources |
+| `argocd.tf` | ArgoCD Helm release → GitOps entry point |
+| `vault.tf` | HashiCorp Vault Helm release + GCP KMS unseal config |
+| `trivy.tf` | Trivy Operator Helm release for runtime image scanning |
+| `victoriametrics.tf` | VictoriaMetrics Helm release |
+| `grafana.tf` | Grafana Helm release + HTTPRoute for dashboard access |
+| `sa.tf` | GCP service accounts + Workload Identity bindings |
+| `provider.tf` | Google and Helm provider config |
+| `variable.tf` | Input variables (project ID, region, cluster name) |
+| `output.tf` | Cluster endpoint, static IP |
 
-#### Traffic Management:
+---
 
-  - Legacy: Standard Kubernetes Ingress (GCE class) for path-based routing.
+## Key Design Decisions
 
-  - Modern: Implementation of the Gateway API using Gateway and HTTPRoute resources for more granular traffic control (e.g., URL rewriting and header manipulation).
+**Workload Identity** — GKE pods authenticate to GCP APIs (KMS, Secret Manager) via Workload Identity instead of long-lived service account keys. Required for Vault auto-unseal and Trivy GCR access.
 
-#### 🛡 Security & Operations
-  - GitOps: Application deployment is managed via ArgoCD, pointing to a "Root" application for automated synchronization.
+**GKE Gateway API** — Uses `CHANNEL_STANDARD` Gateway API instead of legacy Ingress for HTTP routing. Enables per-service HTTPRoute resources with URL rewriting and header manipulation.
 
-  - Secrets Management: HashiCorp Vault is deployed via Helm, integrated with GCP KMS for unsealing and GKE Workload Identity for access.
+**Vault + GCP KMS** — Vault is configured to auto-unseal using a GCP KMS key ring. This eliminates the manual unseal step on pod restart while keeping the unseal key outside the cluster.
 
-  - Network Security: Strict NetworkPolicies implement a "Default Deny" ingress/egress stance, only allowing traffic between the Ingress controller, Frontend, and specific backend namespaces.
+---
 
-  - Vulnerability Scanning: Trivy Operator is integrated to perform continuous security scans of container images.
+## Quick Start
 
-  - Observability: Integrated health checks (Liveness/Readiness probes) and Horizontal Pod Autoscaling (HPA) for the frontend service.
+```bash
+git clone https://github.com/dev126712/micro-service-infra-management
+cd micro-service-infra-management
 
-#### 🛠 Tech Stack
-Cloud: GCP (GKE, VPC, Load Balancing, Gateway API)
-IaC: Terraform
+gcloud auth application-default login
 
-#### Login & Monitoring
-VictoriaMetrics
-Graffana
-Networking: K8s Gateway API, Nginx
+terraform init
+terraform plan
+terraform apply
+```
 
-Security: HashiCorp Vault, Trivy, K8s NetworkPolicies
+After apply, retrieve cluster credentials:
 
-CI/CD: ArgoCD
+```bash
+gcloud container clusters get-credentials <cluster-name> --region <region>
+```
+
+Then apply ArgoCD Application manifests from [microservice-charts-deployment](https://github.com/dev126712/microservice-charts-deployment) to start the GitOps sync.
+
+---
+
+## Related Repos
+
+| Repo | Role |
+|---|---|
+| [microservice-end-to-end](https://github.com/dev126712/microservice-end-to-end) | Platform overview and architecture |
+| [microservice-charts-deployment](https://github.com/dev126712/microservice-charts-deployment) | Helm charts + ArgoCD app manifests |
+| [microservices-app](https://github.com/dev126712/microservices-app) | Application code + CI/CD pipelines |
